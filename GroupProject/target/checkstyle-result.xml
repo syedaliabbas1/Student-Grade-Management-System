@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/config/RestConfiguration.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/config/SecurityConfig.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/controller/GradeController.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/controller/ModuleController.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/controller/StudentController.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/exception/NoGradeAvailableException.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/exception/NoRegistrationException.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/GroupProjectApplication.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/model/Grade.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/model/Module.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/model/Registration.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/model/Student.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/repository/GradeRepository.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/repository/ModuleRepository.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/repository/RegistrationRepository.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/repository/StudentRepository.java">
+</file>
+<file name="/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/resources/application.properties">
+</file>
+</checkstyle>

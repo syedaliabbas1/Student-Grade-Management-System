@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Registration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GroupProject</a> &gt; <a href="index.source.html" class="el_package">uk.ac.ucl.comp0010.model</a> &gt; <span class="el_source">Registration.java</span></div><h1>Registration.java</h1><pre class="source lang-java linenums">package uk.ac.ucl.comp0010.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+/**
+ * A class representing a registration of a student for a module.
+ */
+@Entity
+@Table(name = &quot;registration&quot;)
+public class Registration {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = &quot;student_id&quot;)
+  private Student student;
+
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = &quot;module_id&quot;, unique = true)
+  private Module module;
+
+  /**
+   * Default constructor required by JPA.
+   */
+<span class="fc" id="L33">  public Registration() {}</span>
+
+  /**
+   * Constructs a new Registration with the given student and module.
+   *
+   * @param student the student
+   * @param module the module
+   */
+<span class="fc" id="L41">  public Registration(Student student, Module module) {</span>
+<span class="fc" id="L42">    this.student = student;</span>
+<span class="fc" id="L43">    this.module = module;</span>
+<span class="fc" id="L44">  }</span>
+
+  /**
+   * Gets the ID of the registration.
+   *
+   * @return the ID of the registration
+   */
+  public Long getId() {
+<span class="fc" id="L52">    return id;</span>
+  }
+
+  /**
+   * Sets the ID of the registration.
+   *
+   * @param id the new ID of the registration
+   */
+  public void setId(Long id) {
+<span class="fc" id="L61">    this.id = id;</span>
+<span class="fc" id="L62">  }</span>
+
+  /**
+   * Gets the student associated with the registration.
+   *
+   * @return the student
+   */
+  public Student getStudent() {
+<span class="fc" id="L70">    return student;</span>
+  }
+
+  /**
+   * Sets the student associated with the registration.
+   *
+   * @param student the new student
+   */
+  public void setStudent(Student student) {
+<span class="fc" id="L79">    this.student = student;</span>
+<span class="fc" id="L80">  }</span>
+
+  /**
+   * Gets the module associated with the registration.
+   *
+   * @return the module
+   */
+  public Module getModule() {
+<span class="fc" id="L88">    return module;</span>
+  }
+
+  /**
+   * Sets the module associated with the registration.
+   *
+   * @param module the new module
+   */
+  public void setModule(Module module) {
+<span class="fc" id="L97">    this.module = module;</span>
+<span class="fc" id="L98">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

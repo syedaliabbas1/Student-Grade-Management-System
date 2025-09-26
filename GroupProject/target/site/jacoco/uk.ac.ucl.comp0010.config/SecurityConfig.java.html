@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GroupProject</a> &gt; <a href="index.source.html" class="el_package">uk.ac.ucl.comp0010.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package uk.ac.ucl.comp0010.config;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.util.Arrays;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+/**
+ * Security configuration class for setting up security policies such as CORS and CSRF in the
+ * application. This class defines a {@link SecurityFilterChain} bean and a
+ * {@link CorsConfigurationSource} bean to configure HTTP security settings and cross-origin
+ * resource sharing (CORS) respectively.
+ */
+@Configuration
+<span class="fc" id="L21">public class SecurityConfig {</span>
+
+  /**
+   * Configures the HTTP security settings. Disables CSRF (Cross-Site Request Forgery) protection
+   * and enables CORS (Cross-Origin Resource Sharing) using default settings.
+   *
+   * @param http the {@link HttpSecurity} object used to configure security settings
+   * @return a {@link SecurityFilterChain} object that defines the security filter chain
+   * @throws Exception if an error occurs while configuring security
+   */
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+<span class="fc" id="L33">    http.csrf((csrf) -&gt; csrf.disable()).cors(withDefaults());</span>
+
+<span class="fc" id="L35">    return http.build();</span>
+  }
+
+  /**
+   * Configures the CORS settings for the application. This configuration allows all origins,
+   * headers, and methods for cross-origin requests. It also disables the use of credentials in CORS
+   * requests.
+   *
+   * @return a {@link CorsConfigurationSource} object that provides the CORS configuration
+   */
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+<span class="fc" id="L47">    CorsConfiguration config = new CorsConfiguration();</span>
+<span class="fc" id="L48">    config.setAllowedOriginPatterns(Arrays.asList(&quot;*&quot;)); // Allows requests from all origins</span>
+<span class="fc" id="L49">    config.setAllowedHeaders(Arrays.asList(&quot;*&quot;)); // Allows all headers in requests</span>
+<span class="fc" id="L50">    config.setAllowedMethods(Arrays.asList(&quot;*&quot;)); // Allows all HTTP methods (GET, POST, etc.)</span>
+<span class="fc" id="L51">    config.setAllowCredentials(false); // Disables credentials in requests</span>
+<span class="fc" id="L52">    config.applyPermitDefaultValues(); // Applies default settings</span>
+
+<span class="fc" id="L54">    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();</span>
+<span class="fc" id="L55">    source.registerCorsConfiguration(&quot;/**&quot;, config); // Applies the CORS configuration to all paths</span>
+
+<span class="fc" id="L57">    return source;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

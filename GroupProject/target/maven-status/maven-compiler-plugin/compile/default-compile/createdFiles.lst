@@ -1,0 +1,16 @@
+uk/ac/ucl/comp0010/repository/GradeRepository.class
+uk/ac/ucl/comp0010/GroupProjectApplication.class
+uk/ac/ucl/comp0010/controller/ModuleController.class
+uk/ac/ucl/comp0010/repository/ModuleRepository.class
+uk/ac/ucl/comp0010/repository/StudentRepository.class
+uk/ac/ucl/comp0010/config/RestConfiguration.class
+uk/ac/ucl/comp0010/exception/NoGradeAvailableException.class
+uk/ac/ucl/comp0010/model/Grade.class
+uk/ac/ucl/comp0010/model/Registration.class
+uk/ac/ucl/comp0010/exception/NoRegistrationException.class
+uk/ac/ucl/comp0010/model/Module.class
+uk/ac/ucl/comp0010/repository/RegistrationRepository.class
+uk/ac/ucl/comp0010/config/SecurityConfig.class
+uk/ac/ucl/comp0010/model/Student.class
+uk/ac/ucl/comp0010/controller/GradeController.class
+uk/ac/ucl/comp0010/controller/StudentController.class

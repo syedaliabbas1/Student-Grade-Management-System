@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Student.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GroupProject</a> &gt; <a href="index.source.html" class="el_package">uk.ac.ucl.comp0010.model</a> &gt; <span class="el_source">Student.java</span></div><h1>Student.java</h1><pre class="source lang-java linenums">package uk.ac.ucl.comp0010.model;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import uk.ac.ucl.comp0010.exception.NoGradeAvailableException;
+import uk.ac.ucl.comp0010.exception.NoRegistrationException;
+
+/**
+ * A class representing a student.
+ * &lt;p&gt;
+ * This entity class is used to store and manage a student's information including their grades,
+ * registration details, and other attributes such as name, username, and email.
+ * &lt;/p&gt;
+ */
+@Entity
+@Table(name = &quot;student&quot;)
+public class Student {
+
+  /**
+   * The unique identifier for the student. This is the primary key for the student entity.
+   */
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = &quot;id&quot;)
+  private Long id;
+
+  /**
+   * The first name of the student.
+   */
+  @Column(name = &quot;firstName&quot;, nullable = false, length = 30)
+  private String firstName;
+
+  /**
+   * The last name of the student.
+   */
+  @Column(name = &quot;lastName&quot;, nullable = false, length = 30)
+  private String lastName;
+
+  /**
+   * The username of the student. It must be unique.
+   */
+  @Column(name = &quot;username&quot;, nullable = false, unique = true, length = 30)
+  private String username;
+
+  /**
+   * The email address of the student. It must be unique.
+   */
+  @Column(name = &quot;email&quot;, nullable = false, unique = true, length = 50)
+  private String email;
+
+  /**
+   * The grades associated with this student. This represents the student's scores for modules.
+   */
+<span class="fc" id="L64">  @OneToMany(mappedBy = &quot;student&quot;, cascade = CascadeType.ALL, fetch = FetchType.EAGER)</span>
+  private List&lt;Grade&gt; grades = new ArrayList&lt;&gt;();
+
+  /**
+   * The registrations for modules that this student is enrolled in.
+   */
+<span class="fc" id="L70">  @OneToMany(mappedBy = &quot;student&quot;, cascade = CascadeType.ALL, fetch = FetchType.EAGER)</span>
+  private List&lt;Registration&gt; registrations = new ArrayList&lt;&gt;();
+
+
+  /**
+   * Default constructor for the Student class. Initializes the student without setting any fields.
+   */
+<span class="fc" id="L77">  public Student() {}</span>
+
+  /**
+   * Constructs a new Student with the specified attributes.
+   *
+   * @param firstName the student's first name
+   * @param lastName the student's last name
+   * @param username the student's username
+   * @param email the student's email address
+   */
+<span class="fc" id="L87">  public Student(String firstName, String lastName, String username, String email) {</span>
+<span class="fc" id="L88">    this.firstName = firstName;</span>
+<span class="fc" id="L89">    this.lastName = lastName;</span>
+<span class="fc" id="L90">    this.username = username;</span>
+<span class="fc" id="L91">    this.email = email;</span>
+<span class="fc" id="L92">  }</span>
+
+  /**
+   * Constructs a new Student with the specified attributes including ID.
+   *
+   * @param id the student's unique ID
+   * @param firstName the student's first name
+   * @param lastName the student's last name
+   * @param username the student's username
+   * @param email the student's email address
+   */
+<span class="fc" id="L103">  public Student(long id, String firstName, String lastName, String username, String email) {</span>
+<span class="fc" id="L104">    this.id = id;</span>
+<span class="fc" id="L105">    this.firstName = firstName;</span>
+<span class="fc" id="L106">    this.lastName = lastName;</span>
+<span class="fc" id="L107">    this.username = username;</span>
+<span class="fc" id="L108">    this.email = email;</span>
+<span class="fc" id="L109">  }</span>
+
+  // Getters and Setters
+
+  /**
+   * Gets the unique identifier of the student.
+   *
+   * @return the ID of the student
+   */
+  public Long getId() {
+<span class="fc" id="L119">    return id;</span>
+  }
+
+  /**
+   * Sets the unique identifier for the student.
+   *
+   * @param id the ID to set for the student
+   */
+  public void setId(Long id) {
+<span class="fc" id="L128">    this.id = id;</span>
+<span class="fc" id="L129">  }</span>
+
+  /**
+   * Gets the first name of the student.
+   *
+   * @return the student's first name
+   */
+  public String getFirstName() {
+<span class="fc" id="L137">    return firstName;</span>
+  }
+
+  /**
+   * Sets the first name of the student.
+   *
+   * @param firstName the first name to set for the student
+   */
+  public void setFirstName(String firstName) {
+<span class="fc" id="L146">    this.firstName = firstName;</span>
+<span class="fc" id="L147">  }</span>
+
+  /**
+   * Gets the last name of the student.
+   *
+   * @return the student's last name
+   */
+  public String getLastName() {
+<span class="fc" id="L155">    return lastName;</span>
+  }
+
+  /**
+   * Sets the last name of the student.
+   *
+   * @param lastName the last name to set for the student
+   */
+  public void setLastName(String lastName) {
+<span class="fc" id="L164">    this.lastName = lastName;</span>
+<span class="fc" id="L165">  }</span>
+
+  /**
+   * Gets the username of the student.
+   *
+   * @return the student's username
+   */
+  public String getUsername() {
+<span class="fc" id="L173">    return username;</span>
+  }
+
+  /**
+   * Sets the username of the student.
+   *
+   * @param username the username to set for the student
+   */
+  public void setUsername(String username) {
+<span class="fc" id="L182">    this.username = username;</span>
+<span class="fc" id="L183">  }</span>
+
+  /**
+   * Gets the email address of the student.
+   *
+   * @return the student's email address
+   */
+  public String getEmail() {
+<span class="fc" id="L191">    return email;</span>
+  }
+
+  /**
+   * Sets the email address of the student.
+   *
+   * @param email the email to set for the student
+   */
+  public void setEmail(String email) {
+<span class="fc" id="L200">    this.email = email;</span>
+<span class="fc" id="L201">  }</span>
+
+
+  /**
+   * Sets the grades for the student.
+   *
+   * @param grades the list of grades to set
+   */
+  public void setGrades(List&lt;Grade&gt; grades) {
+<span class="fc" id="L210">    this.grades = grades;</span>
+<span class="fc" id="L211">  }</span>
+
+  /**
+   * Sets the registrations for the student.
+   *
+   * @param registrations the list of registrations to set
+   */
+  public void setRegistrations(List&lt;Registration&gt; registrations) {
+<span class="fc" id="L219">    this.registrations = registrations;</span>
+<span class="fc" id="L220">  }</span>
+
+  /**
+   * Computes the average grade of the student.
+   *
+   * @return the average grade as a float
+   * @throws NoGradeAvailableException if no grades are available for the student
+   */
+  public float computeAverage() throws NoGradeAvailableException {
+<span class="fc bfc" id="L229" title="All 2 branches covered.">    if (grades.isEmpty()) {</span>
+<span class="fc" id="L230">      throw new NoGradeAvailableException(&quot;No grades available for student: &quot; + id);</span>
+    }
+
+<span class="fc" id="L233">    float sum = 0;</span>
+<span class="fc" id="L234">    int count = 0;</span>
+
+<span class="fc bfc" id="L236" title="All 2 branches covered.">    for (Grade grade : grades) {</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">      if (grade.getScore() != null) {</span>
+<span class="fc" id="L238">        sum += grade.getScore();</span>
+<span class="fc" id="L239">        count++;</span>
+      }
+<span class="fc" id="L241">    }</span>
+
+<span class="fc bfc" id="L243" title="All 2 branches covered.">    if (count == 0) {</span>
+<span class="fc" id="L244">      throw new NoGradeAvailableException(&quot;No valid grades available for student: &quot; + id);</span>
+    }
+
+<span class="fc" id="L247">    return sum / count;</span>
+  }
+
+  /**
+   * Adds a grade to the student's record.
+   *
+   * @param grade the grade to add for the student
+   */
+  public void addGrade(Grade grade) {
+    /*
+     * boolean isRegistered = registrations.stream().anyMatch( registration -&gt;
+     * registration.getModule().getCode().equals(grade.getModule().getCode()));
+     * 
+     * if (!isRegistered) { throw new NoRegistrationException( &quot;Student &quot; + id +
+     * &quot; is not registered for module &quot; + grade.getModule().getCode()); }
+     */
+<span class="fc" id="L263">    grade.setStudent(this);</span>
+
+<span class="fc" id="L265">    Optional&lt;Grade&gt; existingGrade = grades.stream()</span>
+<span class="fc" id="L266">        .filter(g -&gt; g.getModule().getCode().equals(grade.getModule().getCode())).findFirst();</span>
+
+<span class="fc bfc" id="L268" title="All 2 branches covered.">    if (existingGrade.isPresent()) {</span>
+<span class="fc" id="L269">      existingGrade.get().setScore(grade.getScore());</span>
+    } else {
+<span class="fc" id="L271">      grades.add(grade);</span>
+    }
+<span class="fc" id="L273">  }</span>
+
+  /**
+   * Retrieves the grade for a specific module.
+   *
+   * @param module the module to get the grade for
+   * @return the grade for the module
+   * @throws NoGradeAvailableException if no grade exists for the module
+   */
+  public Grade getGrade(Module module) throws NoGradeAvailableException {
+    /*
+     * boolean isRegistered = registrations.stream() .anyMatch(registration -&gt;
+     * registration.getModule().getCode().equals(module.getCode()));
+     * 
+     * if (!isRegistered) { throw new NoRegistrationException( &quot;Student &quot; + id +
+     * &quot; is not registered for module &quot; + module.getCode()); }
+     */
+
+<span class="fc" id="L291">    return grades.stream().filter(grade -&gt; grade.getModule().getCode().equals(module.getCode()))</span>
+<span class="fc" id="L292">        .findFirst().orElseThrow(() -&gt; new NoGradeAvailableException(</span>
+<span class="fc" id="L293">            &quot;No grade available for student &quot; + id + &quot; in module &quot; + module.getCode()));</span>
+  }
+
+  /**
+   * Registers the student for a specific module.
+   *
+   * @param module the module to register for
+   */
+  public void registerModule(Module module) {
+<span class="fc" id="L302">    boolean alreadyRegistered = registrations.stream()</span>
+<span class="fc" id="L303">        .anyMatch(registration -&gt; registration.getModule().getCode().equals(module.getCode()));</span>
+
+<span class="fc bfc" id="L305" title="All 2 branches covered.">    if (!alreadyRegistered) {</span>
+<span class="fc" id="L306">      Registration registration = new Registration();</span>
+<span class="fc" id="L307">      registration.setStudent(this);</span>
+<span class="fc" id="L308">      registration.setModule(module);</span>
+<span class="fc" id="L309">      registrations.add(registration);</span>
+    }
+<span class="fc" id="L311">  }</span>
+
+  /**
+   * Retrieves all the modules the student is registered for.
+   *
+   * @return a list of modules the student is registered for
+   */
+  public List&lt;Module&gt; getRegisteredModules() {
+<span class="fc" id="L319">    List&lt;Module&gt; modules = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L320" title="All 2 branches covered.">    for (Registration registration : registrations) {</span>
+<span class="fc" id="L321">      modules.add(registration.getModule());</span>
+<span class="fc" id="L322">    }</span>
+<span class="fc" id="L323">    return modules;</span>
+  }
+
+  /**
+   * Checks if the student is registered for a specific module.
+   *
+   * @param module the module to check
+   * @return true if the student is registered, false otherwise
+   */
+  public boolean isRegisteredFor(Module module) {
+<span class="fc" id="L333">    return registrations.stream()</span>
+<span class="fc" id="L334">        .anyMatch(registration -&gt; registration.getModule().getCode().equals(module.getCode()));</span>
+  }
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

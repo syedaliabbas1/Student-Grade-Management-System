@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"uk.ac.ucl.comp0010"},{"l":"uk.ac.ucl.comp0010.config"},{"l":"uk.ac.ucl.comp0010.controller"},{"l":"uk.ac.ucl.comp0010.exception"},{"l":"uk.ac.ucl.comp0010.model"},{"l":"uk.ac.ucl.comp0010.repository"}];updateSearchResults();

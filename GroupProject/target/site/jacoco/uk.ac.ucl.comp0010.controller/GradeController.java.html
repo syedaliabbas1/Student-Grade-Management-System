@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GradeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GroupProject</a> &gt; <a href="index.source.html" class="el_package">uk.ac.ucl.comp0010.controller</a> &gt; <span class="el_source">GradeController.java</span></div><h1>GradeController.java</h1><pre class="source lang-java linenums">package uk.ac.ucl.comp0010.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import uk.ac.ucl.comp0010.exception.NoRegistrationException;
+import uk.ac.ucl.comp0010.model.Grade;
+import uk.ac.ucl.comp0010.model.Module;
+import uk.ac.ucl.comp0010.model.Student;
+import uk.ac.ucl.comp0010.repository.GradeRepository;
+import uk.ac.ucl.comp0010.repository.ModuleRepository;
+import uk.ac.ucl.comp0010.repository.RegistrationRepository;
+import uk.ac.ucl.comp0010.repository.StudentRepository;
+
+/**
+ * A controller that manages grade objects and provides endpoints for handling grade-related
+ * operations.
+ */
+@RestController
+@RequestMapping
+public class GradeController {
+
+  private final StudentRepository studentRepository;
+  private final GradeRepository gradeRepository;
+  private final ModuleRepository moduleRepository;
+  private final RegistrationRepository registrationRepository;
+
+  /**
+   * Constructs a GradeController with the specified repositories.
+   *
+   * @param studentRepository the repository used to manage student data
+   * @param gradeRepository the repository used to manage grade data
+   * @param moduleRepository the repository used to manage module data
+   */
+  public GradeController(StudentRepository studentRepository, GradeRepository gradeRepository,
+<span class="fc" id="L50">      ModuleRepository moduleRepository, RegistrationRepository registrationRepository) {</span>
+<span class="fc" id="L51">    this.studentRepository = studentRepository;</span>
+<span class="fc" id="L52">    this.gradeRepository = gradeRepository;</span>
+<span class="fc" id="L53">    this.moduleRepository = moduleRepository;</span>
+<span class="fc" id="L54">    this.registrationRepository = registrationRepository;</span>
+<span class="fc" id="L55">  }</span>
+
+  /**
+   * Handles the creation of a new grade for a student.
+   *
+   * @param params a map containing the following keys:
+   *        &lt;ul&gt;
+   *        &lt;li&gt;&lt;strong&gt;student_id&lt;/strong&gt;: the ID of the student&lt;/li&gt;
+   *        &lt;li&gt;&lt;strong&gt;module_code&lt;/strong&gt;: the code of the module&lt;/li&gt;
+   *        &lt;li&gt;&lt;strong&gt;score&lt;/strong&gt;: the score to assign&lt;/li&gt;
+   *        &lt;/ul&gt;
+   * @return a {@link ResponseEntity} containing the saved {@link Grade} object
+   * @throws NoRegistrationException if no registration for the student or module is found
+   */
+  @PostMapping(value = &quot;/grades/addGrade&quot;)
+  public ResponseEntity&lt;Grade&gt; addGrade(@RequestBody Map&lt;String, String&gt; params)
+      throws NoRegistrationException {
+    // Find the module by using the module_code
+<span class="fc" id="L73">    Module module = moduleRepository.findByCode(params.get(&quot;module_code&quot;)).orElseThrow();</span>
+    // Create a Grade object and set its values
+<span class="fc" id="L75">    Integer score = Integer.parseInt(params.get(&quot;score&quot;));</span>
+    // initialize grade object
+<span class="fc" id="L77">    Grade grade = new Grade();</span>
+    // Find the student by using student_id
+<span class="fc" id="L79">    Long studentId = Long.valueOf(params.get(&quot;student_id&quot;));</span>
+    // check if grade already exists
+<span class="fc" id="L81">    grade = gradeRepository.findByStudentIdAndModuleCode(studentId, module.getCode()).orElse(grade);</span>
+    // delete from repository if exists
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">    if (grade.getId() != null) {</span>
+<span class="nc" id="L84">      gradeRepository.deleteById(grade.getId());</span>
+    }
+    // regardless of if exits or not, update the grade
+<span class="fc" id="L87">    Student student = studentRepository.findById(studentId).orElseThrow();</span>
+<span class="fc" id="L88">    grade.setScore(score);</span>
+<span class="fc" id="L89">    grade.setModule(module);</span>
+<span class="fc" id="L90">    grade.setStudent(student);</span>
+    // Save the Grade object
+<span class="fc" id="L92">    grade = gradeRepository.save(grade);</span>
+<span class="fc" id="L93">    student.addGrade(grade);</span>
+
+    // Return the saved Grade object
+<span class="fc" id="L96">    return ResponseEntity.ok(grade);</span>
+  }
+
+  /**
+   * Retrieves a list of all grades.
+   *
+   * @return A list of all grades.
+   */
+  @GetMapping(value = &quot;/grades&quot;)
+  public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; getAllGrades() {
+<span class="fc" id="L106">    List&lt;Grade&gt; grades = (List&lt;Grade&gt;) gradeRepository.findAll();</span>
+
+<span class="fc" id="L108">    String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();</span>
+
+
+<span class="fc" id="L111">    List&lt;Map&lt;String, Object&gt;&gt; gradeMaps = grades.stream().map(grade -&gt; {</span>
+<span class="fc" id="L112">      Map&lt;String, Object&gt; gradeMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L113">      gradeMap.put(&quot;id&quot;, grade.getId());</span>
+<span class="fc" id="L114">      gradeMap.put(&quot;score&quot;, grade.getScore());</span>
+
+<span class="fc" id="L116">      Map&lt;String, Object&gt; links = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L117">      links.put(&quot;module&quot;, Map.of(&quot;href&quot;, baseUrl + &quot;/grades/&quot; + grade.getId() + &quot;/modules&quot;));</span>
+<span class="fc" id="L118">      links.put(&quot;student&quot;, Map.of(&quot;href&quot;, baseUrl + &quot;/grades/&quot; + grade.getId() + &quot;/students&quot;));</span>
+<span class="fc" id="L119">      gradeMap.put(&quot;_links&quot;, links);</span>
+
+<span class="fc" id="L121">      return gradeMap;</span>
+<span class="fc" id="L122">    }).collect(Collectors.toList());</span>
+
+<span class="fc" id="L124">    Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L125">    Map&lt;String, List&lt;Map&lt;String, Object&gt;&gt;&gt; embedded = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L126">    embedded.put(&quot;grades&quot;, gradeMaps);</span>
+<span class="fc" id="L127">    response.put(&quot;_embedded&quot;, embedded);</span>
+
+<span class="fc" id="L129">    return ResponseEntity.ok(response);</span>
+  }
+
+  /**
+   * Retrieves the module associated with the specified grade ID.
+   *
+   * @param id the ID of the grade whose associated module is to be retrieved.
+   * @return a {@link ResponseEntity} containing a map with the module's details, including its code
+   *         and name.
+   * @throws NoSuchElementException if no grade with the specified ID is found.
+   */
+
+  @GetMapping(value = &quot;/grades/{id}/modules&quot;)
+  public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; getModuleByGradeId(@PathVariable Long id) {
+    try {
+<span class="fc" id="L144">      Grade grade = gradeRepository.findById(id)</span>
+<span class="fc" id="L145">          .orElseThrow(() -&gt; new NoSuchElementException(&quot;Grade not found&quot;));</span>
+<span class="fc" id="L146">      Module module = grade.getModule();</span>
+<span class="fc" id="L147">      Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L148">      Map&lt;String, Object&gt; moduleMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L149">      moduleMap.put(&quot;code&quot;, module.getCode());</span>
+<span class="fc" id="L150">      moduleMap.put(&quot;name&quot;, module.getName());</span>
+<span class="fc" id="L151">      response.put(&quot;module&quot;, moduleMap);</span>
+
+<span class="fc" id="L153">      return ResponseEntity.ok(moduleMap);</span>
+<span class="fc" id="L154">    } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L155">      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</span>
+    }
+  }
+
+  /**
+   * Retrieves the student associated with the specified grade ID.
+   *
+   * @param id the ID of the grade whose associated student is to be retrieved.
+   * @return a {@link ResponseEntity} containing a map with the student's details, including their
+   *         ID, first name, and last name.
+   * @throws NoSuchElementException if no grade with the specified ID exists.
+   */
+  @GetMapping(value = &quot;/grades/{id}/students&quot;)
+  public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; getStudentByGradeId(@PathVariable Long id) {
+    try {
+<span class="fc" id="L170">      Grade grade = gradeRepository.findById(id)</span>
+<span class="fc" id="L171">          .orElseThrow(() -&gt; new NoSuchElementException(&quot;Grade not found&quot;));</span>
+<span class="fc" id="L172">      Student student = grade.getStudent();</span>
+<span class="fc" id="L173">      Map&lt;String, Object&gt; studentMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L174">      studentMap.put(&quot;id&quot;, student.getId());</span>
+<span class="fc" id="L175">      studentMap.put(&quot;firstName&quot;, student.getFirstName());</span>
+<span class="fc" id="L176">      studentMap.put(&quot;lastName&quot;, student.getLastName());</span>
+<span class="fc" id="L177">      Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L178">      response.put(&quot;student&quot;, studentMap);</span>
+
+<span class="fc" id="L180">      return ResponseEntity.ok(studentMap);</span>
+<span class="fc" id="L181">    } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L182">      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</span>
+    }
+  }
+
+  /**
+   * Retrieves a grade by its ID.
+   *
+   * @param id the ID of the grade to retrieve
+   * @return a ResponseEntity containing the grade if found, or an appropriate error response if not
+   *         found
+   */
+  @GetMapping(value = &quot;/grades/{id}&quot;)
+  public ResponseEntity&lt;Grade&gt; getGradeById(@PathVariable Long id) {
+    // Fetch the grade with the specified ID from your data source (e.g., database)
+<span class="fc" id="L196">    Grade grade = gradeRepository.findById(id).orElseThrow();</span>
+    // Assuming you have a GradeRepository
+
+<span class="fc" id="L199">    return ResponseEntity.ok(grade);</span>
+  }
+
+  /**
+   * Updates the grade with the specified ID.
+   *
+   * @param id the ID of the grade to update
+   * @param params a map containing the parameters for the update: - &quot;student_id&quot;: the ID of the
+   *        student - &quot;module_code&quot;: the code of the module - &quot;score&quot;: the new score for the grade
+   * @return a ResponseEntity containing the updated Grade object, or a 404 Not Found status if the
+   *         grade is not found
+   * @throws NoRegistrationException if there is an issue with the registration
+   */
+  @PutMapping(value = &quot;/grades/{id}&quot;)
+  public ResponseEntity&lt;Grade&gt; updateGrade(@PathVariable Long id,
+      @RequestBody Map&lt;String, String&gt; params) throws NoRegistrationException {
+    // Fetch the grade with the specified ID from your data source (e.g., database)
+    Grade grade;
+    try {
+<span class="fc" id="L218">      grade = gradeRepository.findById(id)</span>
+<span class="fc" id="L219">          .orElseThrow(() -&gt; new NoSuchElementException(&quot;Grade not found&quot;));</span>
+<span class="fc" id="L220">    } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L221">      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</span>
+<span class="fc" id="L222">    }</span>
+    // Find the student by using student_id
+<span class="fc" id="L224">    Student student =</span>
+<span class="fc" id="L225">        studentRepository.findById(Long.valueOf(params.get(&quot;student_id&quot;))).orElseThrow();</span>
+
+    // Find the module by using the module_code
+<span class="fc" id="L228">    Module module = moduleRepository.findByCode(params.get(&quot;module_code&quot;)).orElseThrow();</span>
+
+    // Update the grade object
+<span class="fc" id="L231">    Integer score = Integer.parseInt(params.get(&quot;score&quot;));</span>
+<span class="fc" id="L232">    grade.setScore(score);</span>
+<span class="fc" id="L233">    grade.setModule(module);</span>
+<span class="fc" id="L234">    grade.setStudent(student);</span>
+
+    // Save the updated Grade object
+<span class="fc" id="L237">    grade = gradeRepository.save(grade);</span>
+
+<span class="fc" id="L239">    return ResponseEntity.ok(grade);</span>
+  }
+
+  /**
+   * Deletes the grade with the specified ID.
+   *
+   * @param id the ID of the grade to be deleted
+   * @return a ResponseEntity with no content if the deletion is successful
+   * @throws NoSuchElementException if the grade with the specified ID is not found
+   */
+  @DeleteMapping(value = &quot;/grades/{id}&quot;)
+  public ResponseEntity&lt;Void&gt; deleteGrade(@PathVariable Long id) {
+    try {
+      // Fetch the grade with the specified ID from your data source (e.g., database)
+<span class="fc" id="L253">      Grade grade = gradeRepository.findById(id).orElseThrow();</span>
+      // Assuming you have a GradeRepository
+      // registrationRepository.deleteById(tempRegistration.getId());
+      // Delete the grade
+<span class="fc" id="L257">      gradeRepository.deleteById(id);</span>
+<span class="fc" id="L258">      studentRepository.deleteById(grade.getStudent().getId());</span>
+      // registrationRepository.save(tempRegistration);
+<span class="fc" id="L260">    } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L261">      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</span>
+<span class="fc" id="L262">    }</span>
+<span class="fc" id="L263">    return ResponseEntity.noContent().build();</span>
+  }
+
+  /**
+   * Updates the score of a grade with the specified ID.
+   *
+   * @param id the ID of the grade to be updated
+   * @param score the new score to be set for the grade
+   * @return ResponseEntity containing the updated Grade object
+   * @throws NoSuchElementException if the grade with the specified ID is not found
+   */
+  @PatchMapping(value = &quot;/grades/{id}&quot;)
+  public ResponseEntity&lt;Grade&gt; updateGradeScore(@PathVariable Long id, @RequestBody Integer score) {
+    // Fetch the grade with the specified ID from your data source (e.g., database)
+<span class="fc" id="L277">    Grade grade = gradeRepository.findById(id).orElseThrow(); // Assuming you have a GradeRepository</span>
+
+    // Update the grade object
+<span class="fc" id="L280">    grade.setScore(score);</span>
+
+    // Save the updated Grade object
+<span class="fc" id="L283">    grade = gradeRepository.save(grade);</span>
+
+<span class="fc" id="L285">    return ResponseEntity.ok(grade);</span>
+  }
+
+
+  /*
+   * Retrieves the module associated with a specific grade ID.
+   *
+   * @param id the ID of the grade whose module is to be retrieved
+   * 
+   * @return ResponseEntity containing the module associated with the specified grade ID
+   * 
+   * @throws NoSuchElementException if no grade with the specified ID is found
+   * 
+   * @GetMapping(value = &quot;/grades/{id}/module&quot;) public ResponseEntity&lt;Module&gt;
+   * getModuleByGradeId(@PathVariable Long id) throws NoSuchElementException { // Fetch the grade
+   * with the specified ID from your data source (e.g., database) Grade grade =
+   * gradeRepository.findById(id).orElseThrow(); // Assuming you have a GradeRepository
+   * 
+   * return ResponseEntity.ok(grade.getModule()); }
+   */
+
+  /*
+   * Retrieves the student associated with a specific grade ID.
+   *
+   * @param id the ID of the grade whose student is to be retrieved
+   * 
+   * @return ResponseEntity containing the student associated with the specified grade ID
+   * 
+   * @throws NoSuchElementException if no grade with the specified ID is found
+   * 
+   * @GetMapping(value = &quot;/grades/{id}/student&quot;) public ResponseEntity&lt;Student&gt;
+   * getStudentByGradeId(@PathVariable Long id) throws NoSuchElementException { // Fetch the grade
+   * with the specified ID from your data source (e.g., database) Grade grade =
+   * gradeRepository.findById(id).orElseThrow(); // Assuming you have a GradeRepository
+   * 
+   * return ResponseEntity.ok(grade.getStudent()); }
+   * 
+   */
+
+  /**
+   * Retrieves a specific property of a module associated with a grade by grade ID.
+   *
+   * @param id the ID of the grade
+   * 
+   * @param proprtyId the property of the module to retrieve (e.g., &quot;code&quot; or &quot;name&quot; or &quot;mnc&quot;)
+   * 
+   * @return a ResponseEntity containing the requested module property as a string, or a BAD_REQUEST
+   *         status if the property is invalid
+   * 
+   * @throws NoSuchElementException if no grade with the specified ID is found
+   */
+  @GetMapping(value = &quot;/grades/{id}/module/{proprtyId}&quot;)
+  public ResponseEntity&lt;String&gt; getModulePropertyByGradeId(@PathVariable Long id,
+      @PathVariable String proprtyId) throws NoSuchElementException {
+    // Fetch the grade with the specified ID from your data source (e.g., database)
+<span class="fc" id="L340">    Grade grade = gradeRepository.findById(id).orElseThrow(); // Assuming you have a GradeRepository</span>
+
+    // Retrieve the module associated with the grade
+<span class="fc" id="L343">    Module module = grade.getModule();</span>
+
+    // Retrieve the requested property of the module
+    String property;
+<span class="pc bpc" id="L347" title="1 of 4 branches missed.">    switch (proprtyId) {</span>
+      case &quot;code&quot;:
+<span class="fc" id="L349">        property = module.getCode();</span>
+<span class="fc" id="L350">        break;</span>
+      case &quot;name&quot;:
+<span class="fc" id="L352">        property = module.getName();</span>
+<span class="fc" id="L353">        break;</span>
+      case &quot;mnc&quot;:
+<span class="fc" id="L355">        property = String.valueOf(module.getMnc());</span>
+<span class="fc" id="L356">        break;</span>
+      default:
+<span class="nc" id="L358">        return ResponseEntity.badRequest().body(&quot;Invalid property ID&quot;);</span>
+    }
+
+<span class="fc" id="L361">    return ResponseEntity.ok(property);</span>
+  }
+
+  /**
+   * Retrieves a specific property of a student associated with a grade by grade ID.
+   *
+   * @param id the ID of the grade
+   * @param proprtyId the property of the student to retrieve (e.g., &quot;name&quot; or &quot;email&quot; or &quot;first&quot; or
+   *        &quot;last&quot; or &quot;username&quot; or &quot;id&quot;)
+   * @return a ResponseEntity containing the requested student property as a string, or a
+   *         BAD_REQUEST status if the property is invalid
+   * @throws NoSuchElementException if no grade with the specified ID is found
+   */
+  @GetMapping(value = &quot;/grades/{id}/student/{proprtyId}&quot;)
+  public ResponseEntity&lt;String&gt; getStudentPropertyByGradeId(@PathVariable Long id,
+      @PathVariable String proprtyId) throws NoSuchElementException {
+    // Fetch the grade with the specified ID
+<span class="fc" id="L378">    Grade grade = gradeRepository.findById(id).orElseThrow(); // Assuming you have a GradeRepository</span>
+
+    // Retrieve the student associated with the grade
+<span class="fc" id="L381">    Student student = grade.getStudent();</span>
+
+    // Retrieve the requested property of the student
+    String property;
+<span class="pc bpc" id="L385" title="1 of 6 branches missed.">    switch (proprtyId) {</span>
+      case &quot;first&quot;:
+<span class="fc" id="L387">        property = student.getFirstName();</span>
+<span class="fc" id="L388">        break;</span>
+      case &quot;email&quot;:
+<span class="fc" id="L390">        property = student.getEmail();</span>
+<span class="fc" id="L391">        break;</span>
+      case &quot;last&quot;:
+<span class="fc" id="L393">        property = student.getLastName();</span>
+<span class="fc" id="L394">        break;</span>
+      case &quot;username&quot;:
+<span class="fc" id="L396">        property = student.getUsername();</span>
+<span class="fc" id="L397">        break;</span>
+      case &quot;id&quot;:
+<span class="fc" id="L399">        property = String.valueOf(student.getId());</span>
+<span class="fc" id="L400">        break;</span>
+      default:
+<span class="nc" id="L402">        return ResponseEntity.badRequest().body(&quot;Invalid property ID&quot;);</span>
+    }
+
+<span class="fc" id="L405">    return ResponseEntity.ok(property);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

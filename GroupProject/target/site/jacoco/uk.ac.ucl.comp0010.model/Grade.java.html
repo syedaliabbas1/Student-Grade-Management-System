@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Grade.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GroupProject</a> &gt; <a href="index.source.html" class="el_package">uk.ac.ucl.comp0010.model</a> &gt; <span class="el_source">Grade.java</span></div><h1>Grade.java</h1><pre class="source lang-java linenums">package uk.ac.ucl.comp0010.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+/**
+ * Represents a Grade for a student in a module.
+ * &lt;p&gt;
+ * This entity stores the information about the grade a student received in a particular module. The
+ * grade includes a score, a reference to the student, and a reference to the module.
+ * &lt;/p&gt;
+ */
+@Entity
+public class Grade {
+
+  /**
+   * The unique identifier for the grade. This is the primary key for the grade entity.
+   */
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  /**
+   * The score the student received in the module. The score can be set to null if not provided
+   * during object creation.
+   */
+  private Integer score;
+
+  /**
+   * The module associated with this grade. The grade is associated with a specific module, which
+   * represents the course or subject.
+   */
+  @ManyToOne
+  @JoinColumn(name = &quot;module_id&quot;)
+  private Module module;
+
+  /**
+   * The student associated with this grade. This is a foreign key that refers to the student who
+   * received the grade.
+   */
+  @ManyToOne
+  @JoinColumn(name = &quot;student_id&quot;)
+  private Student student;
+
+  /**
+   * Default constructor for the Grade class. Initializes the score to null.
+   */
+<span class="fc" id="L52">  public Grade() {</span>
+<span class="fc" id="L53">    this.score = null;</span>
+<span class="fc" id="L54">  }</span>
+
+  /**
+   * Constructor for creating a Grade with a score and a module.
+   *
+   * @param score The score the student received in the module.
+   * @param module The module associated with this grade.
+   */
+<span class="fc" id="L62">  public Grade(Integer score, Module module) {</span>
+<span class="fc" id="L63">    this.score = score;</span>
+<span class="fc" id="L64">    this.module = module;</span>
+<span class="fc" id="L65">  }</span>
+
+  /**
+   * Constructor for creating a Grade with a score, student, and module.
+   *
+   * @param score The score the student received in the module.
+   * @param student The student associated with this grade.
+   * @param module The module associated with this grade.
+   */
+<span class="fc" id="L74">  public Grade(Integer score, Student student, Module module) {</span>
+<span class="fc" id="L75">    this.score = score;</span>
+<span class="fc" id="L76">    this.student = student;</span>
+<span class="fc" id="L77">    this.module = module;</span>
+<span class="fc" id="L78">  }</span>
+
+  /**
+   * Gets the unique identifier of the grade.
+   *
+   * @return The ID of the grade.
+   */
+  public Long getId() {
+<span class="fc" id="L86">    return id;</span>
+  }
+
+  /**
+   * Sets the unique identifier for the grade.
+   *
+   * @param id The new ID for the grade.
+   */
+  public void setId(Long id) {
+<span class="fc" id="L95">    this.id = id;</span>
+<span class="fc" id="L96">  }</span>
+
+  /**
+   * Gets the score of the grade.
+   *
+   * @return The score of the grade, or null if not set.
+   */
+  public Integer getScore() {
+<span class="fc" id="L104">    return score;</span>
+  }
+
+  /**
+   * Sets the score of the grade.
+   *
+   * @param score The score to set for this grade.
+   */
+  public void setScore(Integer score) {
+<span class="fc" id="L113">    this.score = score;</span>
+<span class="fc" id="L114">  }</span>
+
+  /**
+   * Gets the module associated with this grade.
+   *
+   * @return The module associated with the grade.
+   */
+  public Module getModule() {
+<span class="fc" id="L122">    return module;</span>
+  }
+
+  /**
+   * Sets the module associated with this grade.
+   *
+   * @param module The module to associate with this grade.
+   */
+  public void setModule(Module module) {
+<span class="fc" id="L131">    this.module = module;</span>
+<span class="fc" id="L132">  }</span>
+
+  /**
+   * Gets the student associated with this grade.
+   *
+   * @return The student associated with the grade.
+   */
+  public Student getStudent() {
+<span class="fc" id="L140">    return student;</span>
+  }
+
+  /**
+   * Sets the student associated with this grade.
+   *
+   * @param student The student to associate with this grade.
+   */
+  public void setStudent(Student student) {
+<span class="fc" id="L149">    this.student = student;</span>
+<span class="fc" id="L150">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

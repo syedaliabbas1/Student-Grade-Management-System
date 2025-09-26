@@ -1,0 +1,21 @@
+#Thu Dec 05 15:52:34 GMT 2024
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/GroupProjectApplication.java=1733404063688
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/config/RestConfiguration.java=1733404063728
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/config/SecurityConfig.java=1733404063754
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/controller/GradeController.java=1733413748966
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/controller/ModuleController.java=1733413748994
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/controller/StudentController.java=1733413739855
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/exception/NoGradeAvailableException.java=1733404063928
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/exception/NoRegistrationException.java=1733404063944
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/model/Grade.java=1733404063975
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/model/Module.java=1733404063989
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/model/Registration.java=1733404063998
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/model/Student.java=1733411161994
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/repository/GradeRepository.java=1733404064048
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/repository/ModuleRepository.java=1733404064069
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/repository/RegistrationRepository.java=1733404064090
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/java/uk/ac/ucl/comp0010/repository/StudentRepository.java=1733404064102
+/mnt/c/Users/Ali/eclipse-workspace/G-05/GroupProject/src/main/resources/application.properties=1733404064118
+configuration*?=23CC1153FC5DC9F4DCC112A6CB8F7D2CB5AE1C13
+module-resource*?\:checkstyle-suppressions.xml=78AF0FBB9A9CA6768AA22A869A0418E9D084C4A7
+module-resource*?\:checkstyle-xpath-suppressions.xml=992496B19ED3078B2F4FCFAC871E0E37D734F44C
